@@ -1,6 +1,6 @@
 import 'server-only';
 import { API_BASE_URL } from '@/constants/api-routes';
-import { createHttpClient } from './root-http';
+import { createHttpClient } from './http';
 import { getStoredAccessToken } from './token';
 import type { HttpRequestOptions } from '@/types/api';
 

@@ -1,4 +1,4 @@
-import { createHttpClient } from './root-http';
+import { createHttpClient } from './http';
 
 /**
  * Browser-side HTTP client.

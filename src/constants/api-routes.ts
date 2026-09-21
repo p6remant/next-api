@@ -14,6 +14,7 @@ export const API_ENDPOINTS = {
   AUTH: {
     REGISTER: '/player-hub/auth/register',
     LOGIN: '/player-hub/auth/login',
+    REFRESH_TOKEN: '/player-hub/auth/refresh-token',
   },
   BANNER: {
     GAMES: '/player-hub/games/banner',
@@ -25,5 +26,7 @@ export const CLIENT_API_ROUTES = {
   AUTH: {
     LOGIN: '/api/auth/login',
     REGISTER: '/api/auth/register',
+    REFRESH_TOKEN: '/api/auth/refresh-token',
+    LOGOUT: '/api/auth/logout',
   },
 } as const;

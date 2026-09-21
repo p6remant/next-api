@@ -29,6 +29,16 @@ export async function registerUser(payload: RegisterPayload) {
   >(CLIENT_API_ROUTES.AUTH.REGISTER, payload);
 }
 
+export async function refreshAccessToken() {
+  return clientApi.post<ApiResponseEnvelope>(
+    CLIENT_API_ROUTES.AUTH.REFRESH_TOKEN
+  );
+}
+
+export async function logoutUser() {
+  return clientApi.post<ApiResponseEnvelope>(CLIENT_API_ROUTES.AUTH.LOGOUT);
+}
+
 /**
  * Mutation hooks for React components
  */
@@ -42,4 +52,8 @@ export function useRegisterMutation() {
   return useMutation((registrationData: RegisterPayload) =>
     registerUser(registrationData)
   );
+}
+
+export function useLogoutMutation() {
+  return useMutation(() => logoutUser());
 }

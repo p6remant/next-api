@@ -1,4 +1,4 @@
-import type { QueryParameters } from '@/lib/api/query-builder';
+import type { QueryParameters } from '@/lib/api/http';
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 

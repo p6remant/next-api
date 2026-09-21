@@ -21,3 +21,8 @@ export interface RegisterResponseData {
   userId?: string;
   message?: string;
 }
+
+export interface RefreshTokenResponseData {
+  token?: string;
+  accessToken?: string;
+}
