@@ -27,11 +27,7 @@ import { useLoginMutation } from '@/services/auth';
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const {
-    mutateAsync: login,
-    isExecuting,
-    executionError,
-  } = useLoginMutation();
+  const { mutateAsync: login, isLoading, error } = useLoginMutation();
 
   const form = useForm({
     defaultValues: {
@@ -45,8 +41,8 @@ export default function LoginPage() {
       try {
         await login(value);
         router.push('/');
-      } catch (err) {
-        console.error('Login error:', err);
+      } catch {
+        // Surfaced via the `error` state below.
       }
     },
   });
@@ -153,9 +149,9 @@ export default function LoginPage() {
           }}
         </form.Field>
 
-        {executionError && (
+        {error && (
           <div className="rounded-lg border border-rose-500/20 bg-rose-500/10 p-3 text-sm font-medium text-rose-400">
-            {executionError.message}
+            {error.message}
           </div>
         )}
 
@@ -165,10 +161,10 @@ export default function LoginPage() {
           {([canSubmit, isSubmitting]) => (
             <button
               type="submit"
-              disabled={!canSubmit || isSubmitting || isExecuting}
+              disabled={!canSubmit || isSubmitting || isLoading}
               className="mt-1 h-11 w-full rounded bg-rose-500 font-bold text-white disabled:opacity-50"
             >
-              {isSubmitting || isExecuting ? 'Signing In...' : 'Sign In'}
+              {isSubmitting || isLoading ? 'Signing In...' : 'Sign In'}
             </button>
           )}
         </form.Subscribe>

@@ -20,23 +20,23 @@ export interface UseMutationResult<TResponse, TPayload> {
     payload: TPayload,
     options?: MutationLifecycleOptions<TResponse>
   ) => Promise<TResponse>;
-  isExecuting: boolean;
-  executionError: Error | null;
-  executionData: TResponse | null;
-  resetMutationState: () => void;
+  isLoading: boolean;
+  error: Error | null;
+  data: TResponse | null;
+  reset: () => void;
 }
 
 export function useMutation<TResponse, TPayload>(
   mutationExecutor: (payload: TPayload) => Promise<TResponse>
 ): UseMutationResult<TResponse, TPayload> {
-  const [isExecuting, setIsExecuting] = useState(false);
-  const [executionError, setExecutionError] = useState<Error | null>(null);
-  const [executionData, setExecutionData] = useState<TResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [data, setData] = useState<TResponse | null>(null);
 
-  const resetMutationState = useCallback(() => {
-    setIsExecuting(false);
-    setExecutionError(null);
-    setExecutionData(null);
+  const reset = useCallback(() => {
+    setIsLoading(false);
+    setError(null);
+    setData(null);
   }, []);
 
   const mutateAsync = useCallback(
@@ -44,26 +44,26 @@ export function useMutation<TResponse, TPayload>(
       payload: TPayload,
       options?: MutationLifecycleOptions<TResponse>
     ): Promise<TResponse> => {
-      setIsExecuting(true);
-      setExecutionError(null);
+      setIsLoading(true);
+      setError(null);
 
       try {
         const responseData = await mutationExecutor(payload);
-        setExecutionData(responseData);
+        setData(responseData);
         options?.onSuccess?.(responseData);
         options?.onSettled?.(responseData, null);
         return responseData;
-      } catch (error: unknown) {
+      } catch (caughtError: unknown) {
         const normalizedError =
-          error instanceof Error
-            ? error
+          caughtError instanceof Error
+            ? caughtError
             : new Error('Mutation execution failed');
-        setExecutionError(normalizedError);
+        setError(normalizedError);
         options?.onError?.(normalizedError);
         options?.onSettled?.(null, normalizedError);
         throw normalizedError;
       } finally {
-        setIsExecuting(false);
+        setIsLoading(false);
       }
     },
     [mutationExecutor]
@@ -82,9 +82,9 @@ export function useMutation<TResponse, TPayload>(
   return {
     mutate,
     mutateAsync,
-    isExecuting,
-    executionError,
-    executionData,
-    resetMutationState,
+    isLoading,
+    error,
+    data,
+    reset,
   };
 }

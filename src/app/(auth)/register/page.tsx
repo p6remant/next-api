@@ -18,11 +18,7 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showPromoCode, setShowPromoCode] = useState(false);
   const router = useRouter();
-  const {
-    mutateAsync: register,
-    isExecuting,
-    executionError,
-  } = useRegisterMutation();
+  const { mutateAsync: register, isLoading, error } = useRegisterMutation();
 
   const form = useForm({
     defaultValues: {
@@ -43,8 +39,8 @@ export default function RegisterPage() {
           promoCode: value.promoCode || undefined,
         });
         router.push('/');
-      } catch (err) {
-        console.error('Registration error:', err);
+      } catch {
+        // Surfaced via the `error` state below.
       }
     },
   });
@@ -260,9 +256,9 @@ export default function RegisterPage() {
           }}
         </form.Field>
 
-        {executionError && (
+        {error && (
           <div className="rounded-lg border border-rose-500/20 bg-rose-500/10 p-3 text-sm font-medium text-rose-400">
-            {executionError.message}
+            {error.message}
           </div>
         )}
 
@@ -272,10 +268,10 @@ export default function RegisterPage() {
           {([canSubmit, isSubmitting]) => (
             <button
               type="submit"
-              disabled={!canSubmit || isSubmitting || isExecuting}
+              disabled={!canSubmit || isSubmitting || isLoading}
               className="mt-2 h-11 w-full rounded bg-rose-500 font-bold text-white disabled:opacity-50"
             >
-              {isSubmitting || isExecuting ? 'Creating...' : 'Create Account'}
+              {isSubmitting || isLoading ? 'Creating...' : 'Create Account'}
             </button>
           )}
         </form.Subscribe>
